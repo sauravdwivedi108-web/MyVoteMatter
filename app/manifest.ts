@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'VoteSphere',
-    short_name: 'VoteSphere',
+    name: 'MyVoteMatters',
+    short_name: 'MyVote',
     description: 'Secure corporate e-voting',
     start_url: '/app',
     display: 'standalone',

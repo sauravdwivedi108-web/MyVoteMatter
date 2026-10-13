@@ -1,4 +1,4 @@
-# VoteSphere
+# MyVoteMatters
 
 Secure corporate e-voting for AGM resolutions, board elections and member votes. A Next.js website, admin console and mobile-friendly voter app on top of a PostgreSQL voting core that enforces eligibility, one vote per entitlement, ballot secrecy and reconciled counting in the database itself.
 
@@ -25,7 +25,7 @@ Secure corporate e-voting for AGM resolutions, board elections and member votes.
 1. **Create** an election: AGM resolutions, board election or internal poll, with voting window (IST) and record date.
 2. **Import the voter roll**: paste `reference, voting units` rows straight from Excel. Bad rows are reported, never guessed.
 3. **Build the ballot**: ordinary or special resolutions, or a single-choice question.
-4. **Submit**, then a **second person approves**. Approval locks everything and hands over the **tally key** once. Download it and keep it with your scrutinizer: VoteSphere never stores it and the votes cannot be counted without it.
+4. **Submit**, then a **second person approves**. Approval locks everything and hands over the **tally key** once. Download it and keep it with your scrutinizer: MyVoteMatters never stores it and the votes cannot be counted without it.
 5. **Create voting links** and send each voter theirs (download as CSV). Links are shown once; only hashes are stored.
 6. **Open voting**. Voters choose, review, confirm and get a receipt code. Turnout is live; results stay sealed.
 7. **Close voting**, **count** with the tally key file, check the reconciliation, then **publish**.

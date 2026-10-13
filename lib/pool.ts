@@ -1,8 +1,24 @@
 import pg from 'pg';
 import { migrate } from './migrate';
 
-// DATABASE_URL is set by Vercel's Neon / Postgres integration (POSTGRES_URL on older setups).
-const connectionString = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
+/**
+ * Vercel's Neon integration sets DATABASE_URL (and POSTGRES_URL). If a custom
+ * prefix was chosen when connecting, the names change (e.g. STORAGE_URL), so
+ * fall back to any variable holding a postgres:// address.
+ */
+function findConnectionString(): string | undefined {
+  const env = process.env;
+  const direct = env.DATABASE_URL ?? env.POSTGRES_URL;
+  if (direct) return direct;
+  const isPg = (v?: string) => !!v && /^postgres(ql)?:\/\//.test(v);
+  const keys = Object.keys(env).filter((k) => isPg(env[k]));
+  const pick = keys.find((k) => /_DATABASE_URL$|_POSTGRES_URL$/.test(k))
+    ?? keys.find((k) => /_URL$/.test(k) && !/UNPOOLED|NON_POOLING|NO_SSL/.test(k))
+    ?? keys[0];
+  return pick ? env[pick] : undefined;
+}
+
+const connectionString = findConnectionString();
 
 const globalForPool = globalThis as unknown as { vsPool?: pg.Pool; vsReady?: Promise<void> };
 

@@ -212,3 +212,25 @@ td.r, th.r { text-align: right; }
 .hero .brand, .hero .site-nav nav a.link { color: #fff; }
 /* Keep the sidebar colour full height on long pages */
 @media (min-width: 861px) { .shell { background: linear-gradient(to right, var(--navy) 248px, transparent 248px); } }
+
+/* ---------- Icons ---------- */
+.brand-accent { color: var(--teal); }
+.hero .brand-accent, .sidebar .brand-accent { color: #8fe3d8; }
+.sidebar a.nav, .sidebar .nav-button { display: flex; align-items: center; gap: 10px; }
+.sidebar .nav-button { width: 100%; background: none; border: 0; color: #c9cfe3; padding: 10px 12px; border-radius: 9px; font: 550 0.93rem var(--font); cursor: pointer; text-align: left; }
+.sidebar .nav-button:hover { background: var(--navy-2); color: #fff; }
+.feature .icon svg, .stat-icon svg { display: block; }
+.stat { position: relative; }
+.stat-icon { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--violet-soft); color: var(--violet-strong); }
+.stat-icon.teal { background: var(--teal-soft); color: var(--teal-strong); }
+.stat-icon.amber { background: var(--amber-soft); color: var(--amber); }
+.h-icon { display: inline-flex; align-items: center; gap: 10px; }
+.h-icon svg { color: var(--violet-strong); flex: none; }
+.btn svg { flex: none; }
+.step-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--navy); color: #fff; display: grid; place-items: center; margin-bottom: 10px; }
+.steps.with-icons li::before { display: none; }
+.choice-icon { color: var(--muted); }
+.choice.selected .choice-icon { color: var(--violet-strong); }
+.setup-steps { list-style: none; padding: 0; margin: 18px 0; }
+.setup-steps li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-top: 1px solid var(--line); }
+.setup-steps li .n { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--violet-soft); color: var(--violet-strong); display: grid; place-items: center; font-weight: 700; }

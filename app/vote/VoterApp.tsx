@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import type { BallotDefinition, Choices } from '@/lib/core/ballot';
 import { Brand } from '@/components/Brand';
+import { CheckCircle2, ThumbsUp, ThumbsDown, MinusCircle, Lock, ArrowLeft, Send, Receipt, AlertTriangle, Clock } from 'lucide-react';
 
 type Ballot = {
   title: string; org_name: string; status: string; starts_at: string; ends_at: string;
   version: number | null; definition: BallotDefinition | null; already_voted: boolean; voting_units: string; kind: string;
 };
 
-const OPTIONS = [['for', 'For'], ['against', 'Against'], ['abstain', 'Abstain']] as const;
+const OPTIONS = [['for', 'For', ThumbsUp], ['against', 'Against', ThumbsDown], ['abstain', 'Abstain', MinusCircle]] as const;
 const fmt = (d: string) => new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Kolkata' }).format(new Date(d)) + ' IST';
 
 export function VoterApp() {
@@ -60,6 +61,7 @@ export function VoterApp() {
   const shell = (body: React.ReactNode) => (
     <div className="voter">
       <div className="voter-top"><Brand href="/vote" />{ballot && <span className="small muted">{ballot.org_name}</span>}</div>
+      {ballot && <p className="small muted h-icon" style={{ gap: 6, marginTop: -8 }}><Lock size={14} aria-hidden="true" /> Secret ballot: nobody, including the company, can see how you vote.</p>}
       {body}
     </div>
   );
@@ -71,7 +73,7 @@ export function VoterApp() {
     const verify = `/verify?o=${encodeURIComponent(token!.split('.')[0])}&e=${encodeURIComponent(token!.split('.')[1])}&r=${receipt}`;
     return shell(
       <div className="card" style={{ textAlign: 'center' }}>
-        <div className="big-check" aria-hidden="true">✓</div>
+        <div className="big-check" aria-hidden="true"><CheckCircle2 size={36} /></div>
         <h1>Your vote has been recorded</h1>
         <p className="muted">{ballot.title}</p>
         <p>Your receipt code:</p>
@@ -79,7 +81,7 @@ export function VoterApp() {
         <p className="small muted" style={{ marginTop: 12 }}>
           Keep this code. It proves your ballot was accepted. It does not show how you voted, and nobody can use it to find out.
         </p>
-        <Link className="btn secondary" href={verify}>Check my receipt</Link>
+        <Link className="btn secondary" href={verify}><Receipt size={16} aria-hidden="true" /> Check my receipt</Link>
       </div>,
     );
   }
@@ -87,6 +89,7 @@ export function VoterApp() {
   if (ballot.already_voted) {
     return shell(
       <div className="card">
+        <div className="big-check" aria-hidden="true"><CheckCircle2 size={36} /></div>
         <h1>You have already voted</h1>
         <p>A ballot has been recorded for this entitlement in <strong>{ballot.title}</strong>. Each entitlement votes once and votes cannot be changed.</p>
         <p className="small muted">If you did not vote, contact the company secretary straight away.</p>
@@ -98,6 +101,7 @@ export function VoterApp() {
     const ended = ballot.status !== 'open' && ['closed', 'tallied', 'published'].includes(ballot.status);
     return shell(
       <div className="card">
+        <div className="big-check" style={{ background: 'var(--amber-soft)', color: 'var(--amber)' }} aria-hidden="true"><Clock size={32} /></div>
         <h1>{ballot.title}</h1>
         <p>{ended ? 'Voting has closed.' : `Voting has not opened yet. It is scheduled from ${fmt(ballot.starts_at)} to ${fmt(ballot.ends_at)}.`}</p>
         {!ended && <p className="small muted">Keep this link and come back once voting opens.</p>}
@@ -113,7 +117,7 @@ export function VoterApp() {
         <div className="progress" aria-hidden="true"><span className="on" /><span className="on" /><span /></div>
         <h1>Check your vote</h1>
         <p className="muted">Once you confirm, your vote is final and cannot be changed.</p>
-        {error && <div className="notice error" role="alert">{error}</div>}
+        {error && <div className="notice error h-icon" role="alert"><AlertTriangle size={18} aria-hidden="true" />{error}</div>}
         <div className="card">
           {def.type === 'resolutions' ? (
             <table>
@@ -130,8 +134,8 @@ export function VoterApp() {
           {ballot.kind !== 'internal_poll' && <p className="small muted" style={{ marginTop: 12 }}>Cast with {BigInt(ballot.voting_units).toLocaleString('en-IN')} voting units.</p>}
         </div>
         <div style={{ display: 'grid', gap: 10, marginTop: 18 }}>
-          <button className="btn block" onClick={submit} disabled={stage === 'sending'}>{stage === 'sending' ? 'Recording your vote…' : 'Confirm and cast my vote'}</button>
-          <button className="btn secondary block" onClick={() => setStage('ballot')} disabled={stage === 'sending'}>Go back and change</button>
+          <button className="btn block" onClick={submit} disabled={stage === 'sending'}>{stage === 'sending' ? 'Recording your vote…' : <><Send size={18} aria-hidden="true" /> Confirm and cast my vote</>}</button>
+          <button className="btn secondary block" onClick={() => setStage('ballot')} disabled={stage === 'sending'}><ArrowLeft size={18} aria-hidden="true" /> Go back and change</button>
         </div>
       </>,
     );
@@ -148,9 +152,10 @@ export function VoterApp() {
             <legend>Resolution {i + 1}: {r.title}</legend>
             <div className="small muted" style={{ marginBottom: 6 }}>{r.majority === 'special' ? 'Special resolution' : 'Ordinary resolution'}</div>
             <p style={{ whiteSpace: 'pre-wrap' }}>{r.text}</p>
-            {OPTIONS.map(([v, label]) => (
+            {OPTIONS.map(([v, label, Icon]) => (
               <label key={v} className={`choice${choices[r.id] === v ? ' selected' : ''}`}>
                 <input type="radio" name={r.id} value={v} checked={choices[r.id] === v} onChange={() => setChoices({ ...choices, [r.id]: v })} />
+                <Icon size={20} className="choice-icon" aria-hidden="true" />
                 {label}
                 {v === 'abstain' && <span className="tag">not counted for or against</span>}
               </label>

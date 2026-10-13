@@ -7,11 +7,11 @@ export default function Security() {
     <>
       <SiteNav />
       <main className="section prose">
-        <h1>How VoteSphere protects a vote</h1>
+        <h1>How MyVoteMatters protects a vote</h1>
         <p className="muted">A plain account of what is enforced today and what is not yet.</p>
 
         <h2>Two jobs kept apart</h2>
-        <p>An election must check that the right person votes once, and it must stop anyone learning how they voted. VoteSphere keeps those jobs in separate database roles:</p>
+        <p>An election must check that the right person votes once, and it must stop anyone learning how they voted. MyVoteMatters keeps those jobs in separate database roles:</p>
         <ul>
           <li>The <strong>application role</strong> manages elections and voter eligibility. It has no permission to read ballots.</li>
           <li>The <strong>counting role</strong> can read encrypted ballots, and only after voting closes. It has no permission to read the voter roll.</li>
@@ -19,7 +19,7 @@ export default function Security() {
         </ul>
 
         <h2>Encryption</h2>
-        <p>Each ballot is encrypted (X25519, HKDF-SHA256, AES-256-GCM) to a key created when the election is approved. The private key is handed once to the approver and never stored by VoteSphere. Ballots are padded to a fixed size so their length reveals nothing.</p>
+        <p>Each ballot is encrypted (X25519, HKDF-SHA256, AES-256-GCM) to a key created when the election is approved. The private key is handed once to the approver and never stored by MyVoteMatters. Ballots are padded to a fixed size so their length reveals nothing.</p>
 
         <h2>Voting links and receipts</h2>
         <p>Each voter gets a private link. The secret in it sits after the <code>#</code>, which browsers never send in server logs, and only a hash of it is stored. After voting, the voter gets a receipt code that proves the ballot was accepted, without revealing the choice. Anyone holding it can check it on the <a href="/verify">verify page</a>.</p>
@@ -43,7 +43,7 @@ export default function Security() {
             <li>Administrator accounts do not yet have multi-factor sign-in.</li>
           </ul>
         </div>
-        <p>VoteSphere is not STQC-certified and should not be used for legally binding shareholder votes until certification and review by Indian corporate counsel are complete.</p>
+        <p>MyVoteMatters is not STQC-certified and should not be used for legally binding shareholder votes until certification and review by Indian corporate counsel are complete.</p>
       </main>
       <SiteFooter />
     </>

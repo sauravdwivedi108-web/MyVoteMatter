@@ -2,6 +2,7 @@ import { requireSession, can } from '@/lib/auth';
 import { listTeam } from '@/lib/queries';
 import { ActionForm, Submit } from '@/components/forms';
 import { addMember } from '@/lib/actions';
+import { Users, UserPlus } from 'lucide-react';
 
 export const metadata = { title: 'Team' };
 
@@ -21,7 +22,7 @@ export default async function Team() {
       <div className="page-head"><div><h1>Team</h1><p className="muted">Approval needs a second person: whoever submits an election cannot approve it.</p></div></div>
       <div className="grid-2">
         <div className="card">
-          <h2>Members</h2>
+          <h2 className="h-icon"><Users size={20} aria-hidden="true" />Members</h2>
           <table>
             <thead><tr><th>Name</th><th>Role</th></tr></thead>
             <tbody>
@@ -34,7 +35,7 @@ export default async function Team() {
         </div>
         {can(s, 'team') ? (
           <div className="card">
-            <h2>Add a member</h2>
+            <h2 className="h-icon"><UserPlus size={20} aria-hidden="true" />Add a member</h2>
             <ActionForm action={addMember}>
               <div className="field"><label htmlFor="name">Name</label><input id="name" name="name" type="text" required /></div>
               <div className="field"><label htmlFor="email">Email</label><input id="email" name="email" type="email" required /></div>

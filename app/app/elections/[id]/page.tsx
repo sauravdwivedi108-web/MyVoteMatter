@@ -10,6 +10,9 @@ import { ActionForm, ActionButton, Submit } from '@/components/forms';
 import { BallotBuilder } from '@/components/BallotBuilder';
 import { ApprovePanel, InvitePanel } from '@/components/Panels';
 import { Results, Reconciliation } from '@/components/Results';
+import {
+  Send, ShieldCheck, Link2, PlayCircle, Activity, KeyRound, BarChart3, Users, ListChecks, History, Globe, StopCircle,
+} from 'lucide-react';
 
 export const metadata = { title: 'Election' };
 
@@ -54,7 +57,7 @@ export default async function ElectionPage({ params }: { params: Promise<{ id: s
         {/* ---------------- Next action ---------------- */}
         {e.status === 'draft' && manage && (
           <div className="card">
-            <div className="card-head"><h2>Submit for approval</h2></div>
+            <div className="card-head"><h2 className="h-icon"><Send size={20} aria-hidden="true" />Submit for approval</h2></div>
             <p className="muted">
               {e.eligible === 0 ? 'Import the voter roll first. ' : ''}{!e.ballot ? 'Build and save the ballot first. ' : ''}
               A second person will review and approve. After approval nothing below can change.
@@ -65,7 +68,7 @@ export default async function ElectionPage({ params }: { params: Promise<{ id: s
 
         {e.status === 'pending_approval' && (
           <div className="card">
-            <div className="card-head"><h2>Approval</h2></div>
+            <div className="card-head"><h2 className="h-icon"><ShieldCheck size={20} aria-hidden="true" />Approval</h2></div>
             <p>Submitted by <strong>{e.submitted_by_name ?? 'a colleague'}</strong>. Check the voter roll and ballot below before approving.</p>
             {can(s, 'approve') && e.submitted_by !== s.userId ? (
               <ApprovePanel action={approve.bind(null, e.id)} title={e.title} />
@@ -86,7 +89,7 @@ export default async function ElectionPage({ params }: { params: Promise<{ id: s
         {(e.status === 'approved' || e.status === 'open') && manage && (
           <div className="card">
             <div className="card-head">
-              <h2>Voting links</h2>
+              <h2 className="h-icon"><Link2 size={20} aria-hidden="true" />Voting links</h2>
               <span className="small muted">{e.credentials} of {e.eligible} created</span>
             </div>
             <p className="muted">Each voter gets a private link to their ballot. It works on any phone or computer.</p>
@@ -96,20 +99,20 @@ export default async function ElectionPage({ params }: { params: Promise<{ id: s
 
         {e.status === 'approved' && manage && (
           <div className="card">
-            <div className="card-head"><h2>Open voting</h2></div>
+            <div className="card-head"><h2 className="h-icon"><PlayCircle size={20} aria-hidden="true" />Open voting</h2></div>
             {inWindow ? <p className="muted">The voting window has started. Open voting when the links have been sent.</p>
               : <p className="notice warn">The voting window {now < +new Date(e.starts_at) ? `starts ${ist(e.starts_at)}` : 'has ended'}. Votes are only accepted inside it.</p>}
-            <ActionButton className="btn teal" action={openVoting.bind(null, e.id)} confirm="Open voting now?">Open voting</ActionButton>
+            <ActionButton className="btn teal" action={openVoting.bind(null, e.id)} confirm="Open voting now?"><PlayCircle size={18} aria-hidden="true" /> Open voting</ActionButton>
           </div>
         )}
 
         {['open', 'closed', 'tallied', 'published'].includes(e.status) && (
           <div className="card">
             <div className="card-head">
-              <h2>Turnout</h2>
+              <h2 className="h-icon"><Activity size={20} aria-hidden="true" />Turnout</h2>
               {e.status === 'open' && manage && (
                 <ActionButton className="btn danger small" action={closeVoting.bind(null, e.id)}
-                  confirm="Close voting now? No more ballots will be accepted. This cannot be undone.">Close voting</ActionButton>
+                  confirm="Close voting now? No more ballots will be accepted. This cannot be undone."><StopCircle size={16} aria-hidden="true" /> Close voting</ActionButton>
               )}
             </div>
             <div className="stats" style={{ marginBottom: 12 }}>
@@ -124,7 +127,7 @@ export default async function ElectionPage({ params }: { params: Promise<{ id: s
 
         {e.status === 'closed' && (
           <div className="card">
-            <div className="card-head"><h2>Count the votes</h2></div>
+            <div className="card-head"><h2 className="h-icon"><KeyRound size={20} aria-hidden="true" />Count the votes</h2></div>
             {can(s, 'count') ? (
               <ActionForm action={count.bind(null, e.id)}>
                 <p className="muted">Provide the tally key file saved at approval. The key is used for this count only and is not stored.</p>
@@ -140,11 +143,11 @@ export default async function ElectionPage({ params }: { params: Promise<{ id: s
         {e.tally && e.ballot && (
           <div className="card">
             <div className="card-head">
-              <h2>Results</h2>
+              <h2 className="h-icon"><BarChart3 size={20} aria-hidden="true" />Results</h2>
               {e.status === 'tallied' && can(s, 'publish') && (
                 <ActionButton action={publish.bind(null, e.id)} confirm="Publish these results? Anyone with the results link will be able to see them.">Publish results</ActionButton>
               )}
-              {e.status === 'published' && <Link className="btn secondary small" href={publicUrl} target="_blank">Public results page</Link>}
+              {e.status === 'published' && <Link className="btn secondary small" href={publicUrl} target="_blank"><Globe size={16} aria-hidden="true" /> Public results page</Link>}
             </div>
             <Reconciliation result={e.tally} resultHash={e.tally.result_hash} />
             <Results definition={e.ballot.definition} result={e.tally} />
@@ -155,7 +158,7 @@ export default async function ElectionPage({ params }: { params: Promise<{ id: s
         <div className="grid-2">
           <div className="card">
             <div className="card-head">
-              <h2>Voter roll</h2>
+              <h2 className="h-icon"><Users size={20} aria-hidden="true" />Voter roll</h2>
               <span className="small muted">{e.eligible} entitlements · {units(e.units_eligible)} units</span>
             </div>
             {draft && manage && (
@@ -182,7 +185,7 @@ export default async function ElectionPage({ params }: { params: Promise<{ id: s
 
           <div className="card">
             <div className="card-head">
-              <h2>Ballot</h2>
+              <h2 className="h-icon"><ListChecks size={20} aria-hidden="true" />Ballot</h2>
               {e.ballot && <span className="small muted">Version {e.ballot.version}{e.ballot.published ? ' · locked' : ''}</span>}
             </div>
             {draft && manage ? (
@@ -202,7 +205,7 @@ export default async function ElectionPage({ params }: { params: Promise<{ id: s
         </div>
 
         <div className="card">
-          <div className="card-head"><h2>Audit trail</h2><span className="small muted">Hash-chained</span></div>
+          <div className="card-head"><h2 className="h-icon"><History size={20} aria-hidden="true" />Audit trail</h2><span className="small muted">Hash-chained</span></div>
           <div className="table-wrap">
             <table>
               <thead><tr><th>When</th><th>Action</th><th>By</th><th>Hash</th></tr></thead>

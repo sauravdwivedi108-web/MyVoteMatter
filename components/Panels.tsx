@@ -22,7 +22,7 @@ export function ApprovePanel({ action, title }: { action: () => Promise<FormStat
     return (
       <div>
         <div className="notice warn" role="alert">
-          <strong>Save this tally key now.</strong> It is shown only once and VoteSphere does not keep a copy.
+          <strong>Save this tally key now.</strong> It is shown only once and MyVoteMatters does not keep a copy.
           Without it the ballots can never be counted. Keep it with your scrutinizer, offline.
         </div>
         <div className="keybox">{state.key}</div>
